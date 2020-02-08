@@ -1,10 +1,10 @@
 #! /usr/bin/env node
+/* eslint-disable no-console */
 
 import getApp from '..';
 
 const port = process.env.PORT || 5000;
 const app = getApp({ port });
 app.listen(port, '0.0.0.0', () => {
-  // eslint-disable-next-line no-console
   console.log(`Server has been started on ${port}`);
 });
