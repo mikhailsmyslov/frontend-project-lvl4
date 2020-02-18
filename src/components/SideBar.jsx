@@ -27,7 +27,7 @@ const SideBar = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  channels: state.channels.channels,
+  channels: state.channels,
 });
 
 export default connect(mapStateToProps)(SideBar);

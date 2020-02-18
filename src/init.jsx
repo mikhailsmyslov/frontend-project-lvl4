@@ -1,30 +1,42 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import thunk from 'redux-thunk';
-import logger from 'redux-logger';
-import { createStore, applyMiddleware, compose } from 'redux';
-import reducers from './reducers';
+import { configureStore } from '@reduxjs/toolkit';
+import faker from 'faker';
+import cookies from 'js-cookie';
+import { Provider } from 'react-redux';
+import io from 'socket.io-client';
+import { reducers, actions } from './store';
 import App from './components/App';
+import UserContext from './UserContext';
 
+const cookieName = 'shlackUser';
 
 export default (gon) => {
-  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const { channels, messages, currentChannelId } = gon;
-  const intialState = {
-    channels: {
-      channels,
-      currentChannelId,
-    },
-    messages,
-  };
-  const store = createStore(
-    reducers,
-    intialState,
-    composeEnhancers(
-      applyMiddleware(thunk),
-      applyMiddleware(logger),
-    ),
-  );
+  const socket = io();
+  const currentUser = cookies.get(cookieName) || faker.name.findName();
+  cookies.set(cookieName, currentUser);
 
-  ReactDOM.render(<App store={store} />, document.getElementById('app'));
+  const { channels, messages, currentChannelId } = gon;
+  const preloadedState = {
+    channels,
+    messages,
+    app: { currentChannelId, isLoading: false },
+  };
+
+  const store = configureStore({
+    preloadedState,
+    reducer: reducers,
+    devTools: process.env.NODE_ENV !== 'production',
+  });
+
+  socket.on('newMessage', (data) => store.dispatch(actions.pushNewMessage(data)));
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <UserContext.Provider value={{ currentUser }}>
+        <App />
+      </UserContext.Provider>
+    </Provider>,
+    document.getElementById('app'),
+  );
 };

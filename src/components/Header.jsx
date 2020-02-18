@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import UserContext from '../UserContext';
 
 const Header = (props) => {
   const { className } = props;
@@ -9,10 +10,15 @@ const Header = (props) => {
     'd-flex': true,
     'py-3': true,
   }, className);
+
   return (
-    <header className={classes}>
-      Some information
-    </header>
+    <UserContext.Consumer>
+      {({ currentUser }) => (
+        <header className={classes}>
+          {currentUser}
+        </header>
+      )}
+    </UserContext.Consumer>
   );
 };
 

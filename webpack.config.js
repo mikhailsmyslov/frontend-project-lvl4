@@ -20,6 +20,7 @@ module.exports = {
     path: `${__dirname}/dist/public`,
     publicPath: '/assets/',
   },
+  devtool: 'inline-source-map',
   plugins: [
     new MiniCssExtractPlugin(),
   ],
