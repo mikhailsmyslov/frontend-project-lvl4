@@ -1,25 +1,24 @@
 import React from 'react';
-import { Col, Row } from 'react-bootstrap';
 import SideBar from './SideBar';
 import Main from './Main';
 import ErrorBoundary from './ErrorBoundary';
-import Footer from './Footer';
 import Header from './Header';
 import NewMessageForm from './NewMessageForm';
+import Modal from './Modal';
 
 const App = () => (
   <ErrorBoundary>
-    <Row className="no-gutters flex-column flex-grow-1 mh-100">
-      <Col md={2} className="no-gutters flex-md-grow-1">
-        <SideBar className="flex-md-column h-100" />
-      </Col>
-      <Col md={10} className="no-gutters d-flex flex-column flex-grow-1 overflow-hidden">
-        <Header />
-        <Main className="flex-grow-1 overflow-auto" />
-        <NewMessageForm />
-      </Col>
-      <Footer />
-    </Row>
+    <div className="vh-100 vw-100">
+      <div className="d-flex flex-column flex-md-row h-100">
+        <SideBar className="col-md-2 flex-md-column" />
+        <div className="d-flex flex-column flex-grow-1 w-100 overflow-auto">
+          <Header />
+          <Main className="h-100 overflow-auto" />
+          <NewMessageForm />
+        </div>
+      </div>
+    </div>
+    <Modal />
   </ErrorBoundary>
 
 );

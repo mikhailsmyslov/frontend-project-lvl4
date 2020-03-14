@@ -1,4 +1,5 @@
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import log from '../../lib/logger';
 
 class ErrorBoundary extends React.Component {
@@ -17,13 +18,13 @@ class ErrorBoundary extends React.Component {
 
   render() {
     const { hasError } = this.state;
-    const { children } = this.props;
+    const { children, t } = this.props;
     if (hasError) {
-      return <h1>Oops, something went wrong...</h1>;
+      return <h1>{t('errors.oops')}</h1>;
     }
 
     return children;
   }
 }
 
-export default ErrorBoundary;
+export default withTranslation()(ErrorBoundary);

@@ -3,24 +3,28 @@ import { connect } from 'react-redux';
 import { Toast } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import classnames from 'classnames';
+import { Trans } from 'react-i18next';
+import { getCurrentChannelMessages } from '../selectors';
 import UserContext from '../UserContext';
 
 const renderMessage = (message, currentUser) => {
   const { text, author, date } = message;
-  const isMyMessage = author === currentUser;
+  const isCurrentUserMessage = author === currentUser;
   const classes = classnames({
     'w-75': true,
     'my-3': true,
     'mx-5': true,
-    'align-self-end': isMyMessage,
-    'align-self-start': isMyMessage,
+    'align-self-end': isCurrentUserMessage,
+    'align-self-start': isCurrentUserMessage,
   });
   return (
     <div className={classes}>
       <Toast className="mw-100">
         <Toast.Header closeButton={false}>
           <strong className="mr-auto">{author}</strong>
-          <small>{date}</small>
+          <small>
+            <Trans i18nKey="formatDate">{{ date }}</Trans>
+          </small>
         </Toast.Header>
         <Toast.Body dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }} />
       </Toast>
@@ -47,7 +51,7 @@ const Main = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  messages: state.messages,
+  messages: getCurrentChannelMessages(state),
 });
 
 export default connect(mapStateToProps)(Main);
