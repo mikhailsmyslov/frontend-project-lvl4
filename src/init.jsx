@@ -8,6 +8,7 @@ import io from 'socket.io-client';
 import { reducers, actions } from './store';
 import App from './components/App';
 import UserContext from './UserContext';
+import normalizeData from '../lib/normalizeFlatData';
 
 const cookieName = 'shlackUser';
 
@@ -18,9 +19,12 @@ export default (gon) => {
 
   const { channels, messages, currentChannelId } = gon;
   const preloadedState = {
-    channels,
-    messages,
+    channels: normalizeData(channels),
+    messages: normalizeData(messages),
     app: { currentChannelId, isLoading: false },
+    ui: {
+      modal: { display: 'none' },
+    },
   };
 
   const store = configureStore({
@@ -29,7 +33,13 @@ export default (gon) => {
     devTools: process.env.NODE_ENV !== 'production',
   });
 
-  socket.on('newMessage', (data) => store.dispatch(actions.pushNewMessage(data)));
+  socket.on('newMessage', ({ data }) => store.dispatch(actions.storeAddMessage(data)));
+
+  socket.on('newChannel', ({ data }) => store.dispatch(actions.storeAddChannel(data)));
+
+  socket.on('renameChannel', ({ data }) => store.dispatch(actions.storeRenameChannel(data)));
+
+  socket.on('removeChannel', ({ data }) => store.dispatch(actions.storeRemoveChannel(data)));
 
   ReactDOM.render(
     <Provider store={store}>
