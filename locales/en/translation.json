@@ -1,0 +1,14 @@
+{
+  "brand": "Shlack",
+  "channels": "Channels",
+  "addChannel": "Add channel",
+  "formatDate": "{{date, DD MMM YYYY}}",
+  "enterNewChannelName": "Enter name for new channel",
+  "submit": "Submit",
+  "rename": "Rename",
+  "delete": "Delete",
+  "confirmChannelRemove": "Are you sure you want to remove the channel {{name}}?",
+  "errors": {
+    "oops": "Oops, something went wrong..."
+  }
+}
