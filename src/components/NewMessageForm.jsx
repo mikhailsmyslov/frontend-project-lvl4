@@ -1,61 +1,55 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { useDispatch } from 'react-redux';
-import RichTextEditor from 'react-rte';
+import { useDispatch, connect } from 'react-redux';
+import Editor from './TextEditor';
 import { actions } from '../store';
-import TextEditor from './Editor';
 import UserContext from '../UserContext';
 
-const onSubmit = (dispatch, ctx) => (formValues, formActions) => {
-  const { text } = formValues;
-  const { setSubmitting, resetForm } = formActions;
-  const hasContent = !!text.getEditorState().getCurrentContent().getPlainText('').trim();
-  if (hasContent) {
-    dispatch(actions.postNewMessage({ text: text.toString('html'), author: ctx.currentUser }));
-  }
-  setSubmitting(false);
-  resetForm();
-};
-
-const renderTextEditor = (props) => {
-  const { setFieldValue, values: { text }, submitForm } = props;
+const TextEditor = ({ field, form, isLoading }) => {
+  const { name, value } = field;
+  const { setFieldValue, submitForm } = form;
+  const handleChange = (newValue) => setFieldValue(name, newValue);
   return (
-    <TextEditor
-      value={text}
-      onChange={setFieldValue}
+    <Editor
+      value={value}
+      onChange={handleChange}
       onCtrlEnter={submitForm}
-      className="h-100 overflow-auto"
+      disabled={isLoading}
     />
   );
 };
 
-const renderForm = (props) => {
-  const { isSubmitting } = props;
-  return (
-    <Form className="h-25 p-1">
-      <Field
-        name="text"
-        disabled={isSubmitting}
-        component={() => renderTextEditor(props)}
-      />
-    </Form>
-  );
-};
-
-const NewMessageForm = () => {
+const NewMessageForm = (props) => {
   const dispatch = useDispatch();
+  const { isLoading } = props;
+  const context = useContext(UserContext);
+
+  const onSubmit = async (formValues, formActions) => {
+    const { text } = formValues;
+    const { setSubmitting, resetForm } = formActions;
+    if (!text.trim()) return;
+    await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+    setSubmitting(false);
+    resetForm();
+  };
+
   return (
-    <UserContext.Consumer>
-      {(ctx) => (
-        <Formik
-          initialValues={{ text: RichTextEditor.createEmptyValue() }}
-          onSubmit={onSubmit(dispatch, ctx)}
-        >
-          {(props) => renderForm(props)}
-        </Formik>
+    <Formik initialValues={{ text: '' }} onSubmit={onSubmit}>
+      {() => (
+        <Form>
+          <Field name="text">
+            {({ field, form }) => (
+              <TextEditor field={field} form={form} isLoading={isLoading} />
+            )}
+          </Field>
+        </Form>
       )}
-    </UserContext.Consumer>
+    </Formik>
   );
 };
 
-export default NewMessageForm;
+const mapStateToProps = (state) => ({
+  isLoading: state.app.isLoading,
+});
+
+export default connect(mapStateToProps)(NewMessageForm);
