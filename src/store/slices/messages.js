@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
@@ -8,16 +9,17 @@ const { startLoading, finishLoading } = app.actions;
 
 const slice = createSlice({
   name: 'messages',
-  initialState: [],
+  initialState: { byId: {}, allIds: [] },
   reducers: {
-    pushNewMessage: {
-      reducer: (state, action) => { state.push(action.payload); },
-      prepare: (data) => ({ payload: data.data.attributes }),
+    storeAddMessage: (state, action) => {
+      const { id, attributes: message } = action.payload;
+      state.byId[id] = message;
+      state.allIds.push(id);
     },
   },
 });
 
-const postNewMessage = (message) => async (dispatch, getState) => {
+const createNewMessage = (message) => async (dispatch, getState) => {
   dispatch(startLoading());
   try {
     const { currentChannelId } = getState().app;
@@ -31,4 +33,4 @@ const postNewMessage = (message) => async (dispatch, getState) => {
   }
 };
 
-export default { ...slice, actions: { ...slice.actions, postNewMessage } };
+export default { ...slice, actions: { ...slice.actions, createNewMessage } };

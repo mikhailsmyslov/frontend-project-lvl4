@@ -7,7 +7,9 @@ const slice = createSlice({
   reducers: {
     startLoading: (state) => { state.isLoading = true; },
     finishLoading: (state) => { state.isLoading = false; },
+    setCurrentChannelId: (state, action) => { state.currentChannelId = action.payload.id; },
   },
 });
 
+export const defaultChannelId = 1;
 export default slice;
