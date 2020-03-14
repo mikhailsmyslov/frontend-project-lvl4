@@ -10,8 +10,8 @@ import WithWindowSize from '../hoc/withWindowSize';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../assets/textEditor.scss';
 
-const popupClassName = 'rwd-popup bg-secondary text-white shadow-lg border border-secondary rounded';
-const dropdownClassName = 'rwd-dropdown d-flex border border-secondary rounded shadow-lg overflow-auto';
+const popupClassName = 'rwd-popup-custom bg-secondary text-white shadow-lg border border-secondary rounded';
+const dropdownClassName = 'rwd-dropdown-custom d-flex border border-secondary rounded shadow-lg overflow-auto';
 
 const defaultToolBarConfig = {
   options: ['inline', 'list', 'colorPicker', 'emoji', 'image'],
