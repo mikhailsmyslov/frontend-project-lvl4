@@ -2,7 +2,7 @@
   "brand": "Shlack",
   "channels": "Channels",
   "addChannel": "Add channel",
-  "formatDate": "{{date, DD MMM YYYY}}",
+  "formatDate": "{{date, LLL}}",
   "enterNewChannelName": "Enter name for new channel",
   "submit": "Submit",
   "rename": "Rename",

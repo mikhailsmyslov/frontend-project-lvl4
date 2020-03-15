@@ -1,4 +1,4 @@
 {
   "channels": "Каналы",
-  "formatDate": "{{date, DD MMM YYYY}}"
+  "formatDate": "{{date, LLL}}"
 }
