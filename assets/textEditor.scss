@@ -1,4 +1,8 @@
-.rdw-dropdown-custom {
+.rdw-colorpicker-modal-options {
+  overflow: auto !important;
+}
+
+.rwd-dropdown-custom {
   width: max-content !important;
 }
 
@@ -6,7 +10,7 @@
   position: absolute !important;
   bottom: 35px !important;
   top: auto !important;
-  left: -115px !important;
+  left: -110px !important;
   width: 210px !important;
   height: unset !important;
   max-height: 300px !important;
@@ -14,5 +18,15 @@
 }
 
 .public-DraftStyleDefault-block {
-  margin: 0.25rem 0;
+  margin: 0;
+}
+.rdw-editor-toolbar {
+  [class*="wrapper"] {
+    border: none;
+    margin-bottom: 0;
+  }
+}
+
+.DraftEditor-root {
+  width: 100%;
 }
