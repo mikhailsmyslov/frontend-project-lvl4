@@ -4,6 +4,7 @@ import { Toast } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import classnames from 'classnames';
 import { Trans } from 'react-i18next';
+import Avatar from 'react-avatar';
 import { getCurrentChannelMessages } from '../selectors';
 import UserContext from '../UserContext';
 
@@ -21,6 +22,7 @@ const renderMessage = (message, currentUser) => {
     <div className={classes}>
       <Toast className="mw-100">
         <Toast.Header closeButton={false}>
+          <Avatar name={author} round size={25} textSizeRatio={1} className="mr-2" />
           <strong className="mr-auto">{author}</strong>
           <small>
             <Trans i18nKey="formatDate">{{ date }}</Trans>

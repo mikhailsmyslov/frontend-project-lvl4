@@ -5,11 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSlackHash, faGithub, faBootstrap, faJs, faReact,
 } from '@fortawesome/free-brands-svg-icons';
-import { faPlus, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
+import Avatar from 'react-avatar';
 import UserContext from '../UserContext';
 import { actions } from '../store';
 import { getChannels, getCurrentChannelId } from '../selectors';
+
 
 const handleChannelChange = (props) => (event) => {
   event.preventDefault();
@@ -41,7 +43,7 @@ const SideBar = (props) => {
         {t('brand')}
       </Navbar.Brand>
       <div className="my-2 ml-1 text-light align-self-start">
-        <FontAwesomeIcon icon={faUser} className="mr-3" />
+        <Avatar name={currentUser} round size={25} textSizeRatio={1} className="mr-2" />
         {currentUser}
       </div>
       <Navbar.Toggle aria-controls="sidebar-nav" />
