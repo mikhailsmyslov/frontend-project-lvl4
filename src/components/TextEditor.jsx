@@ -4,7 +4,7 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import classnames from 'classnames';
-import { has, merge, isEmpty } from 'lodash';
+import { isUndefined, merge, noop } from 'lodash';
 import Spinner from './Spinner';
 import WithWindowSize from '../hoc/withWindowSize';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -25,17 +25,11 @@ const defaultToolBarConfig = {
   emoji: { popupClassName },
 };
 
-const compactToolBarConfig = merge(
-  {},
-  defaultToolBarConfig,
-  { inline: { inDropdown: true } },
-  { list: { inDropdown: true } },
-);
+const compactToolBarConfig = merge({},
+  defaultToolBarConfig, { inline: { inDropdown: true } }, { list: { inDropdown: true } });
 
-const isEmptyEditorState = (editorState = {}) => {
-  if (isEmpty(editorState)) return true;
-  return !editorState.getCurrentContent().getPlainText().trim();
-};
+const hasContent = (editorState = {}) => !!editorState
+  .getCurrentContent?.().getPlainText?.().trim?.();
 
 const getEditorStateFromHtml = (html = '', options = {}) => {
   const { contentBlocks, entityMap } = htmlToDraft(html);
@@ -45,72 +39,62 @@ const getEditorStateFromHtml = (html = '', options = {}) => {
   return editorState;
 };
 
-const getHtmlFromEditorState = (editorState) => {
-  if (isEmptyEditorState(editorState)) return '';
-  const content = editorState.getCurrentContent();
-  const raw = convertToRaw(content);
-  return draftToHtml(raw);
-};
+const getHtmlFromEditorState = (editorState) => (
+  hasContent(editorState) ? draftToHtml(convertToRaw(editorState.getCurrentContent())) : '');
 
 class Editor extends React.Component {
-  static getDerivedStateFromProps = (props, state) => {
-    if (!has(props, 'value')) return null;
-    const { value, autoFocus } = props;
-    const { editorState } = state;
-    const html = getHtmlFromEditorState(editorState);
-    if (value === html) return null;
+  static getDerivedStateFromProps = ({ value, autoFocus }, { editorState }) => {
+    if (isUndefined(value) || value === getHtmlFromEditorState(editorState)) return null;
     return { editorState: getEditorStateFromHtml(value, { setFocusToEnd: autoFocus }) };
   }
 
   constructor(props) {
     super(props);
     const { value, autoFocus } = props;
-    this.state = {
-      editorState: getEditorStateFromHtml(value, { setFocusToEnd: autoFocus }),
-    };
+    this.state = { editorState: getEditorStateFromHtml(value, { setFocusToEnd: autoFocus }) };
   }
 
-  onEditorStateChange = (editorState) => {
-    if (isEmptyEditorState(editorState)) {
-      this.setState({ editorState: EditorState.undo(editorState) });
-    } else {
-      this.setState({ editorState });
-    }
-    const { onChange } = this.props;
-    if (!onChange) return;
-    const html = getHtmlFromEditorState(editorState);
+  onEditorStateChange = (nextEditorState) => {
+    const { editorState: prevEditorState } = this.state;
+    if (!hasContent(nextEditorState) && !hasContent(prevEditorState)) return;
+    this.setState({ editorState: nextEditorState });
+    const { onChange = noop } = this.props;
+    const html = getHtmlFromEditorState(nextEditorState);
     onChange(html);
   };
 
   handleReturn = (event) => {
     if (!event.ctrlKey) return null;
-    const { onCtrlEnter } = this.props;
-    if (onCtrlEnter) onCtrlEnter();
+    const { onCtrlEnter = noop } = this.props;
+    onCtrlEnter();
     return 'handled';
   }
+
+  renderSpinner = () => (
+    <div className="
+      modal-backdrop
+      show
+      d-flex
+      justify-content-center
+      align-items-center
+      bg-light
+      position-absolute
+      w-100
+      h-100"
+    >
+      <Spinner />
+    </div>
+  )
 
   render() {
     const {
       className, disabled, windowSize: { deviceSize }, placeholder,
     } = this.props;
     const { editorState } = this.state;
-    const classes = classnames({
-      'h-100 position-relative': true,
-    }, className);
+    const classes = classnames({ 'h-100 position-relative': true }, className);
     return (
       <div className={classes}>
-        {disabled && (
-        <div
-          className="
-          modal-backdrop show
-          d-flex justify-content-center align-items-center
-          bg-light
-          position-absolute
-          w-100 h-100"
-        >
-          <Spinner />
-        </div>
-        )}
+        {disabled && this.renderSpinner()}
         <ReactDraftWysiwyg
           key={deviceSize}
           readOnly={disabled}

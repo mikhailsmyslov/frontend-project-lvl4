@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Toast, Button } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import classnames from 'classnames';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 import { Trans } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -61,34 +61,31 @@ const Main = (props) => {
   const [isScrollButtonVisible, setScrollButtonVisibility] = useState(false);
 
 
-  const scrollMainToBottom = (behavior) => {
+  const scrollToBottom = () => {
     const main = mainRef.current;
-    main.scroll({ top: main.scrollHeight, behavior });
+    main.scroll({ top: main.scrollHeight });
   };
 
   useEffect(() => {
     if (scrollStatus === 'scrolling') return;
-    const behavior = scrollStatus === 'initial' ? 'auto' : 'smooth';
-    scrollMainToBottom(behavior);
+    scrollToBottom();
   });
 
   const handleScroll = () => {
     const { scrollHeight, scrollTop, clientHeight } = mainRef.current;
     const offsetFromBottom = Math.trunc(scrollHeight - scrollTop - clientHeight);
-    const hasReachedBottom = offsetFromBottom === 0;
-    const shouldShowScrollButton = offsetFromBottom > 100;
-    setScrollButtonVisibility(shouldShowScrollButton);
-    setScrollStatus(hasReachedBottom ? 'bottom' : 'scrolling');
+    setScrollButtonVisibility(offsetFromBottom > 100);
+    setScrollStatus(offsetFromBottom === 0 ? 'bottom' : 'scrolling');
   };
 
-  const debouncedHandleScroll = debounce(handleScroll, 100, { leading: true });
+  const debouncedHandleScroll = throttle(handleScroll, 100);
 
   return (
     <main ref={mainRef} className={mainClasses} onScroll={debouncedHandleScroll}>
       {messages.map(({
         text, author, date, id,
       }) => <Message key={id} text={text} author={author} date={date} />)}
-      {isScrollButtonVisible && <ScrollToBottomButton onClick={() => scrollMainToBottom('smooth')} />}
+      {isScrollButtonVisible && <ScrollToBottomButton onClick={() => scrollToBottom()} />}
     </main>
   );
 };
