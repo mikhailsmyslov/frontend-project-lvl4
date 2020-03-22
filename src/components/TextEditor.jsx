@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Editor as ReactDraftWysiwyg } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import classnames from 'classnames';
-import { isUndefined, merge, noop } from 'lodash';
-import Spinner from './Spinner';
+import { merge, noop } from 'lodash';
 import WithWindowSize from '../hoc/withWindowSize';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../assets/textEditor.scss';
@@ -28,89 +27,74 @@ const defaultToolBarConfig = {
 const compactToolBarConfig = merge({},
   defaultToolBarConfig, { inline: { inDropdown: true } }, { list: { inDropdown: true } });
 
-const hasContent = (editorState = {}) => !!editorState
-  .getCurrentContent?.().getPlainText?.().trim?.();
-
-const getEditorStateFromHtml = (html = '', options = {}) => {
-  const { contentBlocks, entityMap } = htmlToDraft(html);
-  const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-  const editorState = EditorState.createWithContent(contentState);
-  if (options.setFocusToEnd) return EditorState.moveFocusToEnd(editorState);
-  return editorState;
-};
+const hasContent = (editorState) => !!editorState?.getCurrentContent?.().getPlainText?.().trim?.();
 
 const getHtmlFromEditorState = (editorState) => (
   hasContent(editorState) ? draftToHtml(convertToRaw(editorState.getCurrentContent())) : '');
 
-class Editor extends React.Component {
-  static getDerivedStateFromProps = ({ value, autoFocus }, { editorState }) => {
-    if (isUndefined(value) || value === getHtmlFromEditorState(editorState)) return null;
-    return { editorState: getEditorStateFromHtml(value, { setFocusToEnd: autoFocus }) };
-  }
+const getEditorStateFromHtml = (html) => {
+  if (!html) return EditorState.createEmpty();
+  const { contentBlocks, entityMap } = htmlToDraft(html);
+  const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
+  const editorState = EditorState.createWithContent(contentState);
+  return editorState;
+};
 
-  constructor(props) {
-    super(props);
-    const { value, autoFocus } = props;
-    this.state = { editorState: getEditorStateFromHtml(value, { setFocusToEnd: autoFocus }) };
-  }
+const Editor = (props) => {
+  const {
+    value = '',
+    onChange = noop,
+    onCtrlEnter = noop,
+    className = null,
+    disabled,
+    windowSize: { deviceSize = '' },
+    placeholder = '',
+    autoFocus = false,
+  } = props;
 
-  onEditorStateChange = (nextEditorState) => {
-    const { editorState: prevEditorState } = this.state;
-    if (!hasContent(nextEditorState) && !hasContent(prevEditorState)) return;
-    this.setState({ editorState: nextEditorState });
-    const { onChange = noop } = this.props;
-    const html = getHtmlFromEditorState(nextEditorState);
-    onChange(html);
+  const [editorState, setEditorState] = useState(getEditorStateFromHtml(value));
+  const editorRef = useRef();
+
+  useEffect(() => { if (autoFocus) editorRef.current.focus(); });
+
+  useEffect(() => {
+    if (value === getHtmlFromEditorState(editorState)) return;
+    setEditorState(getEditorStateFromHtml(value));
+  }, [value]);
+
+  const onEditorStateChange = (nextState) => {
+    setEditorState(nextState);
+    onChange(hasContent(nextState) ? getHtmlFromEditorState(nextState) : '');
   };
 
-  handleReturn = (event) => {
+  const handleReturn = (event) => {
     if (!event.ctrlKey) return null;
-    const { onCtrlEnter = noop } = this.props;
     onCtrlEnter();
     return 'handled';
-  }
+  };
 
-  renderSpinner = () => (
-    <div className="
-      modal-backdrop
-      show
-      d-flex
-      justify-content-center
-      align-items-center
-      bg-light
-      position-absolute
-      w-100
-      h-100"
-    >
-      <Spinner />
+  const editorClasses = classnames({
+    'border border-info rounded d-flex align-items-center px-1': true,
+    'bg-light': disabled,
+  });
+
+  return (
+    <div className={className}>
+      <ReactDraftWysiwyg
+        readOnly={disabled}
+        editorRef={(ref) => { editorRef.current = ref; }}
+        editorState={editorState}
+        onEditorStateChange={onEditorStateChange}
+        handleReturn={handleReturn}
+        toolbar={deviceSize === 'xs' ? compactToolBarConfig : defaultToolBarConfig}
+        editorClassName={editorClasses}
+        editorStyle={{ maxHeight: '200px', minHeight: '2rem' }}
+        toolbarClassName="d-flex border-0 m-0 p-0 pb-1"
+        hashtag={{ separator: ' ', trigger: '#' }}
+        placeholder={placeholder}
+      />
     </div>
-  )
-
-  render() {
-    const {
-      className, disabled, windowSize: { deviceSize }, placeholder,
-    } = this.props;
-    const { editorState } = this.state;
-    const classes = classnames({ 'h-100 position-relative': true }, className);
-    return (
-      <div className={classes}>
-        {disabled && this.renderSpinner()}
-        <ReactDraftWysiwyg
-          key={deviceSize}
-          readOnly={disabled}
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-          handleReturn={this.handleReturn}
-          toolbar={deviceSize === 'xs' ? compactToolBarConfig : defaultToolBarConfig}
-          editorClassName="border border-info rounded d-flex align-items-center px-1"
-          editorStyle={{ maxHeight: '200px', minHeight: '2rem' }}
-          toolbarClassName="d-flex border-0 m-0 p-0 pb-1"
-          hashtag={{ separator: ' ', trigger: '#' }}
-          placeholder={placeholder}
-        />
-      </div>
-    );
-  }
-}
+  );
+};
 
 export default WithWindowSize(Editor);

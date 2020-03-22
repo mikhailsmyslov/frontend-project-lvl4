@@ -6,7 +6,7 @@ import { Toast, Button } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import classnames from 'classnames';
 import { throttle } from 'lodash';
-import { Trans } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Avatar from 'react-avatar';
@@ -38,13 +38,14 @@ const Message = (props) => {
     'align-self-end': isCurrentUserMessage,
     'align-self-start': !isCurrentUserMessage,
   });
+  const { t } = useTranslation();
   return (
     <div className={messageClasses}>
       <Toast className="mw-100">
         <Toast.Header closeButton={false}>
           <Avatar name={author} round size={25} textSizeRatio={1} className="mr-2" />
           <strong className="mr-auto">{author}</strong>
-          <small><Trans i18nKey="formatDate">{{ date }}</Trans></small>
+          <small>{t('formatDate', { date })}</small>
         </Toast.Header>
         <Toast.Body dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(text) }} />
       </Toast>

@@ -1,4 +1,20 @@
 {
+  "brand": "Shlack",
   "channels": "Каналы",
-  "formatDate": "{{date, LLL}}"
+  "addChannel": "Добавить канал",
+  "removeChannel": "Удалить канал",
+  "renameChannel": "Переименовать канал",
+  "formatDate": "{{date, LLL}}",
+  "enterNewChannelName": "Введите название нового канала",
+  "enterMessage": "Введите сообщение",
+  "ok": "Ок",
+  "cancel": "Оменить",
+  "submit": "Ок",
+  "rename": "Переименовать",
+  "delete": "Удалить",
+  "confirmChannelRemove": "Вы уверены что хотите удалить канал {{name}}?",
+  "sendMessageShortCut": "Отправить сообщение: {{shortcut}}",
+  "errors": {
+    "oops": "Упс, что-то пошло не так..."
+  }
 }

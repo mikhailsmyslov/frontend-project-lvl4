@@ -9,6 +9,7 @@ export default async () => {
   await i18n
     .use(LanguageDetector)
     .use(initReactI18next)
+    .on('languageChanged', (lng) => moment.locale(lng))
     .init({
       fallbackLng: 'en',
       debug: process.env.NODE_ENV === 'development',
@@ -27,6 +28,4 @@ export default async () => {
         ru: { translation: ru },
       },
     });
-
-  i18n.on('languageChanged', (lng) => moment.locale(lng));
 };

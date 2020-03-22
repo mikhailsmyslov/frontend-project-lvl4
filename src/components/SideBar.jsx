@@ -13,18 +13,19 @@ import { actions } from '../store';
 import { getChannels, getCurrentChannelId } from '../selectors';
 
 
-const handleChannelChange = (props) => (event) => {
-  event.preventDefault();
-  const { dispatch, id } = props;
-  dispatch(actions.setCurrentChannelId({ id }));
-};
-
-const renderChannel = (props) => {
+const Channel = (props) => {
   const { id, name, currentChannelId } = props;
   const isActive = id === currentChannelId;
+  const dispatch = useDispatch();
+
+  const handleChannelChange = (event) => {
+    event.preventDefault();
+    dispatch(actions.setCurrentChannelId({ id }));
+  };
+
   return (
     <Nav.Item key={id} className="ml-3">
-      <Nav.Link active={isActive} onClick={handleChannelChange(props)}>
+      <Nav.Link active={isActive} onClick={handleChannelChange}>
         {`# ${name}`}
       </Nav.Link>
     </Nav.Item>
@@ -59,7 +60,7 @@ const SideBar = (props) => {
             <FontAwesomeIcon icon={faPlus} className="mr-1" />
           </Button>
           <Nav className="flex-column">
-            {channels.map((channel) => renderChannel({ ...props, ...channel, dispatch }))}
+            {channels.map((channel) => Channel({ ...props, ...channel, dispatch }))}
           </Nav>
         </div>
         <div className="d-inline-block mx-auto float-right px-2 mb-2 mt-4 justify-content-around text-secondary">

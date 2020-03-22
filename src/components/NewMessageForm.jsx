@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next';
 import Editor from './TextEditor';
 import { actions } from '../store';
 import UserContext from '../UserContext';
+import Spinner from './Spinner';
 
-const TextEditor = ({
-  field, form, isLoading,
-}) => {
+const TextEditor = (props) => {
+  const { field, form } = props;
   const { name, value } = field;
-  const { setFieldValue, submitForm } = form;
+  const { setFieldValue, submitForm, isSubmitting } = form;
   const { t } = useTranslation();
   const handleChange = (newValue) => setFieldValue(name, newValue);
   return (
@@ -21,7 +21,7 @@ const TextEditor = ({
       value={value}
       onChange={handleChange}
       onCtrlEnter={submitForm}
-      disabled={isLoading}
+      disabled={isSubmitting}
       placeholder={t('enterMessage')}
       className="flex-grow-1"
       autoFocus
@@ -29,45 +29,38 @@ const TextEditor = ({
   );
 };
 
-const NewMessageForm = (props) => {
+const NewMessageForm = () => {
   const dispatch = useDispatch();
-  const { isLoading } = props;
   const context = useContext(UserContext);
+  const { t } = useTranslation();
 
   const onSubmit = async (formValues, formActions) => {
     const { text } = formValues;
     const { setSubmitting, resetForm } = formActions;
-    if (!text.trim()) return;
-    await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+    if (text.trim()) {
+      await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+    }
     setSubmitting(false);
     resetForm();
   };
 
   return (
     <Formik initialValues={{ text: '' }} onSubmit={onSubmit}>
-      {() => (
+      {({ isSubmitting }) => (
         <Form className="position-relative d-flex shadow-lg p-2">
-          <Field name="text">
-            {({ field, form }) => (
-              <TextEditor
-                field={field}
-                form={form}
-                isLoading={isLoading}
-              />
-            )}
-          </Field>
+          <Field name="text" component={TextEditor} />
           <small
             className="d-none d-lg-inline position-absolute text-secondary"
             style={{ top: '5px', right: '10px' }}
           >
-            Отправить сообщение: Ctrl+Enter
+            {t('sendMessageShortCut', { shortcut: 'Ctrl+Enter' })}
           </small>
           <Button
             type="submit"
             className="align-self-end px-2 py-1 ml-1 btn-info"
-            disabled={isLoading}
+            disabled={isSubmitting}
           >
-            <FontAwesomeIcon icon={faPaperPlane} />
+            {isSubmitting ? <Spinner /> : <FontAwesomeIcon icon={faPaperPlane} />}
           </Button>
         </Form>
       )}
@@ -75,8 +68,4 @@ const NewMessageForm = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  isLoading: state.app.isLoading,
-});
-
-export default connect(mapStateToProps)(NewMessageForm);
+export default NewMessageForm;
