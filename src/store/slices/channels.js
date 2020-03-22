@@ -35,6 +35,7 @@ const createNewChannel = (channel) => async (dispatch) => {
     const data = { attributes: { ...channel } };
     const { data: { data: { id } } } = await axios.post(routes.channelsPath(), { data });
     dispatch(setCurrentChannelId({ id }));
+    throw new Error('OOOOOOOOPSSSSSS');
   } catch (err) {
     console.error(err);
     throw err;

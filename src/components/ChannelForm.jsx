@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 import { actions } from '../store';
 import { getChannels, getCurrentChannel } from '../selectors';
 import Spinner from './Spinner';
+import notify from '../notify';
 
 const mapFormParamsByType = {
   addChannel: {
@@ -34,7 +35,11 @@ const ChannelForm = (props) => {
   const handleSubmit = async (formValues, formActions) => {
     const { name } = formValues;
     const { setSubmitting, resetForm } = formActions;
-    await dispatch(action({ ...currentChannel, name }));
+    try {
+      await dispatch(action({ ...currentChannel, name }));
+    } catch ({ message }) {
+      notify(message);
+    }
     setSubmitting(false);
     resetForm();
     onSubmit();

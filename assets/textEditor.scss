@@ -4,11 +4,12 @@
 
 .rwd-dropdown-custom {
   width: max-content !important;
+  bottom: 0.25rem;
 }
 
 .rwd-popup-custom {
   position: absolute !important;
-  bottom: 35px !important;
+  bottom: -100% !important;
   top: auto !important;
   left: -110px !important;
   width: 210px !important;

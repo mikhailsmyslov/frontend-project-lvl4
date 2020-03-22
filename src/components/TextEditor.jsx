@@ -81,6 +81,7 @@ const Editor = (props) => {
   return (
     <div className={className}>
       <ReactDraftWysiwyg
+        key={deviceSize}
         readOnly={disabled}
         editorRef={(ref) => { editorRef.current = ref; }}
         editorState={editorState}

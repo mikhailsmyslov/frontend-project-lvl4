@@ -14,9 +14,10 @@ import { getChannels, getCurrentChannelId } from '../selectors';
 
 
 const Channel = (props) => {
-  const { id, name, currentChannelId } = props;
+  const {
+    id, name, currentChannelId, dispatch,
+  } = props;
   const isActive = id === currentChannelId;
-  const dispatch = useDispatch();
 
   const handleChannelChange = (event) => {
     event.preventDefault();
@@ -43,12 +44,12 @@ const SideBar = (props) => {
         <FontAwesomeIcon icon={faSlackHash} className="mr-2" />
         {t('brand')}
       </Navbar.Brand>
-      <div className="my-2 ml-1 text-light align-self-start">
-        <Avatar name={currentUser} round size={25} textSizeRatio={1} className="mr-2" />
-        {currentUser}
-      </div>
       <Navbar.Toggle aria-controls="sidebar-nav" />
-      <Navbar.Collapse id="sidebar-nav" className="flex-column justify-content-between w-100 mh-100 overflow-auto align-items-start mt-4">
+      <Navbar.Collapse id="sidebar-nav" className="flex-column justify-content-between w-100 mh-100 overflow-auto align-items-start">
+        <div className="mt-3 mb-4 ml-1 text-light align-self-start">
+          <Avatar name={currentUser} round size={25} textSizeRatio={1} className="mr-2" />
+          {currentUser}
+        </div>
         <div className="w-100 h-100 pr-1 overflow-auto">
           <Button
             variant="outline-secondary"

@@ -9,6 +9,7 @@ import Editor from './TextEditor';
 import { actions } from '../store';
 import UserContext from '../UserContext';
 import Spinner from './Spinner';
+import notify from '../notify';
 
 const TextEditor = (props) => {
   const { field, form } = props;
@@ -38,7 +39,11 @@ const NewMessageForm = () => {
     const { text } = formValues;
     const { setSubmitting, resetForm } = formActions;
     if (text.trim()) {
-      await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+      try {
+        await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+      } catch ({ message }) {
+        notify(message);
+      }
     }
     setSubmitting(false);
     resetForm();

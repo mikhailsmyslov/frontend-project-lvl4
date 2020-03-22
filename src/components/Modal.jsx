@@ -1,12 +1,13 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { withTranslation, Trans } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { noop } from 'lodash';
 import { actions } from '../store';
 import ChannelForm from './ChannelForm';
 import { getCurrentChannel } from '../selectors';
 import Spinner from './Spinner';
+import notify from '../notify';
 
 class ModalComponent extends React.Component {
   constructor(props) {
@@ -42,12 +43,16 @@ class ModalComponent extends React.Component {
 
   handleRemoveChannel = async () => {
     const { removeChannel, currentChannel } = this.props;
-    await removeChannel(currentChannel);
+    try {
+      await removeChannel(currentChannel);
+    } catch ({ message }) {
+      notify(message);
+    }
   }
 
   renderChannelRemoveConfirmation = () => {
-    const { currentChannel: { name } } = this.props;
-    return <Trans i18nKey="confirmChannelRemove">{{ name }}</Trans>;
+    const { currentChannel: { name }, t } = this.props;
+    return t('confirmChannelRemove', { name });
   }
 
   render() {

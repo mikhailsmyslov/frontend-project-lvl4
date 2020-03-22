@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import ReactNotification from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
 import SideBar from './SideBar';
 import Main from './Main';
 import ErrorBoundary from './ErrorBoundary';
@@ -16,6 +18,7 @@ const App = (props) => {
   return (
     <ErrorBoundary>
       <div className="vh-100 vw-100">
+        <ReactNotification />
         <div className="d-flex flex-column flex-md-row h-100">
           <SideBar className="col-md-2 flex-md-column" />
           <div className="d-flex flex-column flex-grow-1 w-100 overflow-auto">
