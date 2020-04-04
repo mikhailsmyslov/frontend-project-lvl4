@@ -1,10 +1,11 @@
 import { store } from 'react-notifications-component';
 import 'animate.css';
 import { isPlainObject } from 'lodash';
+import i18n from 'i18next';
 
 const configuration = {
   title: 'Error',
-  message: 'Unknown error',
+  message: '',
   type: 'warning',
   insert: 'top',
   container: 'top-right',
@@ -16,7 +17,7 @@ const configuration = {
 };
 
 export default (options) => {
-  let message;
+  let message = i18n.t('errors.oops');
   switch (true) {
     case typeof options === 'string':
       message = options;

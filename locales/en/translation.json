@@ -15,6 +15,8 @@
   "confirmChannelRemove": "Are you sure you want to remove the channel {{name}}?",
   "sendMessageShortCut": "Send message: {{shortcut}}",
   "errors": {
-    "oops": "Oops, something went wrong..."
+    "oops": "Oops, something went wrong...",
+    "required": "Field could not be empty",
+    "invalidChannelName": "Invalid channel name. Name should contain only EN lower-cased letters and should be between 6 and 15 characters."
   }
 }

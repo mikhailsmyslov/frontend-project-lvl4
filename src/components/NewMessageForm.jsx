@@ -41,12 +41,12 @@ const NewMessageForm = () => {
     if (text.trim()) {
       try {
         await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+        resetForm();
       } catch ({ message }) {
         notify(message);
       }
     }
     setSubmitting(false);
-    resetForm();
   };
 
   return (

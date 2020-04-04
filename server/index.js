@@ -9,7 +9,6 @@ import socket from 'socket.io';
 import fastify from 'fastify';
 import pointOfView from 'point-of-view';
 import fastifyStatic from 'fastify-static';
-// import _ from 'lodash';
 import addRoutes from './routes.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -17,7 +16,7 @@ const appPath = path.join(__dirname, '..');
 const isDevelopment = !isProduction;
 
 const setUpViews = (app, _options) => {
-  const domain = isDevelopment ? 'http://localhost:8080' : '';
+  const domain = isDevelopment ? 'http://localhost:8081' : '';
   app.register(pointOfView, {
     engine: {
       pug: Pug,
