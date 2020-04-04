@@ -32,7 +32,7 @@ module.exports = {
     gon: 'gon',
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   output: {
     path: `${__dirname}/dist/public`,
@@ -61,7 +61,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: 'babel-loader',
       },

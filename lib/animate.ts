@@ -4,7 +4,7 @@
  * @param {string} animationName - name of animation see {@link https://daneden.github.io/animate.css|animate.css} for details
  * @param {Function=} callback - callback function to be executed after finishing the animation
  */
-export default (element, animationName, callback) => {
+export default (element: HTMLElement, animationName: string, callback?: Function): void => {
   if (!element) return;
   element.classList.add('animated', animationName);
 

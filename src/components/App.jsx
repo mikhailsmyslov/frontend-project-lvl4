@@ -1,3 +1,4 @@
+// @ts-check
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactNotification from 'react-notifications-component';
@@ -8,13 +9,12 @@ import ErrorBoundary from './ErrorBoundary';
 import Header from './Header';
 import NewMessageForm from './NewMessageForm';
 import Modal from './Modal';
-
-const buildKey = (prefix, base) => [prefix, base].join('_');
+import buildKey from '../../lib/buildKey';
 
 const App = (props) => {
   const { currentChannelId } = props;
   const mainKey = buildKey('main', currentChannelId);
-  const messageFormKey = ['messageForm', currentChannelId].join('_');
+  const messageFormKey = buildKey('messageForm', currentChannelId);
   return (
     <ErrorBoundary>
       <div className="vh-100 vw-100">

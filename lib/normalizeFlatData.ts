@@ -3,7 +3,7 @@
  * @param {Array} flat - a collection of elements to be normalized
  * @returns {Object} - Normalized collection with a shape { byId: { ... }, allIds: [...] }
  */
-export default (flat) => flat.reduce(({ byId, allIds }, item) => {
+export default (flat: Array<any>): object => flat.reduce(({ byId, allIds }, item) => {
   const { id } = item;
   return {
     byId: { ...byId, [id]: item },
