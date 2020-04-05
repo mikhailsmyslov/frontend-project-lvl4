@@ -1,3 +1,4 @@
+// @ts-check
 import React, {
   useRef, useEffect, useState, useContext,
 } from 'react';
@@ -43,7 +44,7 @@ const Message = (props) => {
     <div className={messageClasses}>
       <Toast className="mw-100">
         <Toast.Header closeButton={false}>
-          <Avatar name={author} round size={25} textSizeRatio={1} className="mr-2" />
+          <Avatar name={author} round size="25" textSizeRatio={1} className="mr-2" />
           <strong className="mr-auto">{author}</strong>
           <small>{t('formatDate', { date })}</small>
         </Toast.Header>

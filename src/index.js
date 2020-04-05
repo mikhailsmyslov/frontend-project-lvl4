@@ -1,9 +1,11 @@
-/* eslint-disable no-console */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import '../assets/application.scss';
 import i18nInit from './i18n';
 import run from './init';
+import logger from '../lib/logger';
+
+const log = logger();
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
@@ -12,9 +14,9 @@ if (process.env.NODE_ENV !== 'production') {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/assets/service-worker.js').then((registration) => {
-      console.warn('SW registered: ', registration);
+      log('SW registered: ', registration);
     }).catch((registrationError) => {
-      console.warn('SW registration failed: ', registrationError);
+      log('SW registration failed: ', registrationError);
     });
   });
 }

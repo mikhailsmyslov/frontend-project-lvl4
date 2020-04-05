@@ -1,3 +1,4 @@
+// @ts-check
 import React, { useRef, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { useDispatch, connect } from 'react-redux';

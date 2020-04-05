@@ -1,6 +1,9 @@
+// @ts-check
 import React from 'react';
 import { withTranslation } from 'react-i18next';
-import log from '../../lib/logger';
+import logger from '../../lib/logger';
+
+const log = logger('Error');
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

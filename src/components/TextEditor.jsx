@@ -1,3 +1,4 @@
+// @ts-check
 import React, { useState, useEffect, useRef } from 'react';
 import { Editor as ReactDraftWysiwyg } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
@@ -53,7 +54,7 @@ const Editor = (props) => {
   } = props;
 
   const [editorState, setEditorState] = useState(getEditorStateFromHtml(value));
-  const editorRef = useRef();
+  const editorRef = useRef(null);
 
   useEffect(() => { if (autoFocus) editorRef.current.focus(); });
 
@@ -86,6 +87,7 @@ const Editor = (props) => {
         editorRef={(ref) => { editorRef.current = ref; }}
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
+        // @ts-ignore
         handleReturn={handleReturn}
         toolbar={deviceSize === 'xs' ? compactToolBarConfig : defaultToolBarConfig}
         editorClassName={editorClasses}

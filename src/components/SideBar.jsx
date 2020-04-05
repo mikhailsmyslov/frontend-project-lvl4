@@ -1,3 +1,4 @@
+// @ts-check
 import React, { useContext } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { connect, useDispatch } from 'react-redux';
@@ -47,7 +48,7 @@ const SideBar = (props) => {
       <Navbar.Toggle aria-controls="sidebar-nav" />
       <Navbar.Collapse id="sidebar-nav" className="flex-column justify-content-between w-100 mh-100 overflow-auto align-items-start">
         <div className="mt-3 mb-4 ml-1 text-light align-self-start">
-          <Avatar name={currentUser} round size={25} textSizeRatio={1} className="mr-2" />
+          <Avatar name={currentUser} round size="25" textSizeRatio={1} className="mr-2" />
           {currentUser}
         </div>
         <div className="w-100 h-100 pr-1 overflow-auto">

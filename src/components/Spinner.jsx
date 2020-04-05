@@ -1,3 +1,4 @@
+// @ts-check
 import React from 'react';
 import { Spinner as BootStrapSpinner } from 'react-bootstrap';
 

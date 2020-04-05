@@ -1,3 +1,4 @@
+// @ts-check
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
