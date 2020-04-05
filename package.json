@@ -13,7 +13,7 @@
     "test": "jest",
     "build-server": "babel server --out-dir dist --source-maps inline && cp -r server/views dist/views",
     "build-app": "npx webpack -p --env production",
-    "build": "npm run build-app && npm run build-server",
+    "build": "NODE_ENV=production npm run build-app && npm run build-server",
     "start": "dist/bin/slack.js",
     "postinstall": "npm run build"
   },

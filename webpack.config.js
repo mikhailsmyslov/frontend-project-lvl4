@@ -23,7 +23,7 @@ module.exports = {
           },
         },
         extractComments: false,
-        test: /\.jsx?$/i,
+        test: /\.[jt]sx?$/i,
         sourceMap: isDevelopment,
       }),
     ],
