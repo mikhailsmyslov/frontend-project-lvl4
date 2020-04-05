@@ -16,6 +16,11 @@ build:
 	rm -rf dist
 	npm run build
 
+build-stats:
+	rm -rf dist
+	rm -rf stats.json
+	npx webpack -p --env  production --profile --json > stats.json
+
 test:
 	npm test
 

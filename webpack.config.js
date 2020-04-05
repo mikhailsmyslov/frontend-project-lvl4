@@ -51,13 +51,14 @@ module.exports = {
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb|ru/),
   ],
   devtool: isDevelopment ? 'source-map' : false,
-  devServer: {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
-    },
-  },
+  devServer: isDevelopment
+    ? {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
+        'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
+      },
+    } : {},
   module: {
     rules: [
       {
