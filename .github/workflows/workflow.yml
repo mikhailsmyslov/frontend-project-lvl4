@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x]
+        node-version: [13.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -24,8 +24,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - name: install && build
+      run: npm ci
+    - name: lint check 
+      run: npx eslint . --ext js,jsx --fix
+    - name: test && coverage
+      uses: paambaati/codeclimate-action@v2.2.4
       env:
-        CI: true
+        CC_TEST_REPORTER_ID: 1bb0be69381c8b6e42d99e142e0fae39ab7a83309d50c94444e8333610c58f60
+      with:
+        coverageCommand: npm test -- --coverage
