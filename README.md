@@ -12,11 +12,5 @@ My fourth project on [Hexlet](https://ru.hexlet.io)
 ### Description
 Diploma project of frontend education course.  
 
-<!-- To add details later -->
- 
-
-### Used tools & technologies
-<!-- To add details later -->
-
 ### Live Demo
 [ms-slack.herokuapp.com](https://ms-slack.herokuapp.com/)
