@@ -28,9 +28,10 @@ jobs:
       run: npm ci
     - name: lint check 
       run: npx eslint . --ext js,jsx --fix
-    - name: test && coverage
-      uses: paambaati/codeclimate-action@v2.2.4
+    - name: test & publish code coverage
+      uses: paambaati/codeclimate-action@v2.6.0
       env:
         CC_TEST_REPORTER_ID: 1bb0be69381c8b6e42d99e142e0fae39ab7a83309d50c94444e8333610c58f60
       with:
         coverageCommand: npm test -- --coverage
+        debug: true
