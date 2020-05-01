@@ -2,19 +2,27 @@
 /* eslint-disable no-console */
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import _ from 'lodash';
 import routes from '../../routes';
 import app from './app';
+import channels from './channels';
 
 const { startLoading, finishLoading } = app.actions;
+const { removeChannelFromStore } = channels.actions;
 
 const slice = createSlice({
   name: 'messages',
-  initialState: { byId: {}, allIds: [] },
+  initialState: [],
   reducers: {
     addMessageToStore: (state, action) => {
-      const { id, attributes: message } = action.payload;
-      state.byId[id] = message;
-      state.allIds.push(id);
+      const { attributes: message } = action.payload;
+      state.push(message);
+    },
+  },
+  extraReducers: {
+    [removeChannelFromStore]: (state, action) => {
+      const { id: channelId } = action.payload;
+      _.remove(state, { channelId });
     },
   },
 });

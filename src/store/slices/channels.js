@@ -10,21 +10,19 @@ const { startLoading, finishLoading, setCurrentChannelId } = app.actions;
 
 const slice = createSlice({
   name: 'channels',
-  initialState: { byId: {}, allIds: [] },
+  initialState: [],
   reducers: {
     addChannelToStore: (state, action) => {
-      const { id, attributes: channel } = action.payload;
-      state.byId[id] = channel;
-      state.allIds.push(id);
+      const { attributes: channel } = action.payload;
+      state.push(channel);
     },
     renameChannelInStore: (state, action) => {
       const { id, attributes: { name } } = action.payload;
-      state.byId[id].name = name;
+      _.find(state, { id }).name = name;
     },
     removeChannelFromStore: (state, action) => {
       const { id } = action.payload;
-      delete state.byId[id];
-      _.pull(state.allIds, id);
+      _.remove(state, { id });
     },
   },
 });

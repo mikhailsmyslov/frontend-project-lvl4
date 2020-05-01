@@ -9,7 +9,6 @@ import io from 'socket.io-client';
 import { reducers, actions } from './store';
 import App from './components/App';
 import UserContext from './UserContext';
-import normalizeData from '../lib/normalizeFlatData';
 
 const cookieName = 'shlackUser';
 
@@ -20,12 +19,10 @@ export default (gon) => {
 
   const { channels, messages, currentChannelId } = gon;
   const preloadedState = {
-    channels: normalizeData(channels),
-    messages: normalizeData(messages),
+    channels,
+    messages,
     app: { currentChannelId, isLoading: false },
-    ui: {
-      modal: { display: 'none' },
-    },
+    ui: { modal: { display: 'none' } },
   };
 
   const store = configureStore({
