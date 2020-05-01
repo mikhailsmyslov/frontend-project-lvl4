@@ -34,13 +34,13 @@ export default (gon) => {
     devTools: process.env.NODE_ENV !== 'production',
   });
 
-  socket.on('newMessage', ({ data }) => store.dispatch(actions.storeAddMessage(data)));
+  socket.on('newMessage', ({ data }) => store.dispatch(actions.addMessageToStore(data)));
 
-  socket.on('newChannel', ({ data }) => store.dispatch(actions.storeAddChannel(data)));
+  socket.on('newChannel', ({ data }) => store.dispatch(actions.addChannelToStore(data)));
 
-  socket.on('renameChannel', ({ data }) => store.dispatch(actions.storeRenameChannel(data)));
+  socket.on('renameChannel', ({ data }) => store.dispatch(actions.renameChannelInStore(data)));
 
-  socket.on('removeChannel', ({ data }) => store.dispatch(actions.storeRemoveChannel(data)));
+  socket.on('removeChannel', ({ data }) => store.dispatch(actions.removeChannelFromStore(data)));
 
   ReactDOM.render(
     <Provider store={store}>

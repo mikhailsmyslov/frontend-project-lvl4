@@ -12,16 +12,16 @@ const slice = createSlice({
   name: 'channels',
   initialState: { byId: {}, allIds: [] },
   reducers: {
-    storeAddChannel: (state, action) => {
+    addChannelToStore: (state, action) => {
       const { id, attributes: channel } = action.payload;
       state.byId[id] = channel;
       state.allIds.push(id);
     },
-    storeRenameChannel: (state, action) => {
+    renameChannelInStore: (state, action) => {
       const { id, attributes: { name } } = action.payload;
       state.byId[id].name = name;
     },
-    storeRemoveChannel: (state, action) => {
+    removeChannelFromStore: (state, action) => {
       const { id } = action.payload;
       delete state.byId[id];
       _.pull(state.allIds, id);
@@ -29,7 +29,7 @@ const slice = createSlice({
   },
 });
 
-const createNewChannel = (channel) => async (dispatch) => {
+const createChannel = (channel) => async (dispatch) => {
   dispatch(startLoading());
   try {
     const data = { attributes: { ...channel } };
@@ -73,7 +73,7 @@ export default {
   ...slice,
   actions: {
     ...slice.actions,
-    createNewChannel,
+    createChannel,
     renameChannel,
     removeChannel,
   },

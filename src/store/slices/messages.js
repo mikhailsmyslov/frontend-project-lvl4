@@ -11,7 +11,7 @@ const slice = createSlice({
   name: 'messages',
   initialState: { byId: {}, allIds: [] },
   reducers: {
-    storeAddMessage: (state, action) => {
+    addMessageToStore: (state, action) => {
       const { id, attributes: message } = action.payload;
       state.byId[id] = message;
       state.allIds.push(id);
@@ -19,7 +19,7 @@ const slice = createSlice({
   },
 });
 
-const createNewMessage = (message) => async (dispatch, getState) => {
+const createMessage = (message) => async (dispatch, getState) => {
   dispatch(startLoading());
   try {
     const { currentChannelId } = getState().app;
@@ -33,4 +33,4 @@ const createNewMessage = (message) => async (dispatch, getState) => {
   }
 };
 
-export default { ...slice, actions: { ...slice.actions, createNewMessage } };
+export default { ...slice, actions: { ...slice.actions, createMessage } };

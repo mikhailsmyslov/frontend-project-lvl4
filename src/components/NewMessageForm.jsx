@@ -41,7 +41,7 @@ const NewMessageForm = () => {
     const { setSubmitting, resetForm } = formActions;
     if (text.trim()) {
       try {
-        await dispatch(actions.createNewMessage({ text, author: context.currentUser }));
+        await dispatch(actions.createMessage({ text, author: context.currentUser }));
         resetForm();
       } catch ({ message }) {
         notify(message);

@@ -14,7 +14,7 @@ import notify from '../notify';
 const mapFormParamsByType = {
   addChannel: {
     placeholderKey: 'enterNewChannelName',
-    action: actions.createNewChannel,
+    action: actions.createChannel,
     getInitValue: () => '',
   },
   renameChannel: {
