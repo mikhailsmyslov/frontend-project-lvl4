@@ -29,13 +29,10 @@ const slice = createSlice({
 
 const createMessage = (message) => async (dispatch, getState) => {
   dispatch(startLoading());
+  const { currentChannelId } = getState().app;
+  const data = { attributes: { ...message, date: new Date() } };
   try {
-    const { currentChannelId } = getState().app;
-    const data = { attributes: { ...message, date: new Date() } };
-    await axios.post(routes.channelMessagesPath(currentChannelId), { data });
-  } catch (err) {
-    console.error(err);
-    throw err;
+    axios.post(routes.channelMessagesPath(currentChannelId), { data });
   } finally {
     dispatch(finishLoading());
   }

@@ -10,7 +10,10 @@ import Editor from './TextEditor';
 import { actions } from '../store';
 import UserContext from '../UserContext';
 import Spinner from './Spinner';
+import logger from '../../lib/logger';
 import notify from '../notify';
+
+const log = logger('messages');
 
 const TextEditor = (props) => {
   const { field, form } = props;
@@ -44,6 +47,7 @@ const NewMessageForm = () => {
         await dispatch(actions.createMessage({ text, author: context.currentUser }));
         resetForm();
       } catch ({ message }) {
+        log(message);
         notify(message);
       }
     }

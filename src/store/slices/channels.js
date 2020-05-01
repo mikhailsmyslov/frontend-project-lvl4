@@ -29,13 +29,10 @@ const slice = createSlice({
 
 const createChannel = (channel) => async (dispatch) => {
   dispatch(startLoading());
+  const data = { attributes: { ...channel } };
   try {
-    const data = { attributes: { ...channel } };
     const { data: { data: { id } } } = await axios.post(routes.channelsPath(), { data });
     dispatch(setCurrentChannelId({ id }));
-  } catch (err) {
-    console.error(err);
-    throw err;
   } finally {
     dispatch(finishLoading());
   }
@@ -43,12 +40,9 @@ const createChannel = (channel) => async (dispatch) => {
 
 const renameChannel = ({ id, name }) => async (dispatch) => {
   dispatch(startLoading());
+  const data = { attributes: { name } };
   try {
-    const data = { attributes: { name } };
     await axios.patch(routes.channelPath(id), { data });
-  } catch (err) {
-    console.error(err);
-    throw err;
   } finally {
     dispatch(finishLoading());
   }
@@ -59,9 +53,6 @@ const removeChannel = ({ id }) => async (dispatch) => {
   try {
     await axios.delete(routes.channelPath(id));
     dispatch(setCurrentChannelId({ id: defaultChannelId }));
-  } catch (err) {
-    console.error(err);
-    throw err;
   } finally {
     dispatch(finishLoading());
   }

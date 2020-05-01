@@ -8,7 +8,10 @@ import { actions } from '../store';
 import ChannelForm from './ChannelForm';
 import { getCurrentChannel } from '../selectors';
 import Spinner from './Spinner';
+import logger from '../../lib/logger';
 import notify from '../notify';
+
+const log = logger('channels');
 
 class ModalComponent extends React.Component {
   constructor(props) {
@@ -47,6 +50,7 @@ class ModalComponent extends React.Component {
     try {
       await removeChannel(currentChannel);
     } catch ({ message }) {
+      log(message);
       notify(message);
     }
   }

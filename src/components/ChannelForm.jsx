@@ -9,7 +9,10 @@ import cn from 'classnames';
 import { actions } from '../store';
 import { getChannels, getCurrentChannel } from '../selectors';
 import Spinner from './Spinner';
+import logger from '../../lib/logger';
 import notify from '../notify';
+
+const log = logger('channels');
 
 const mapFormParamsByType = {
   addChannel: {
@@ -48,6 +51,7 @@ const ChannelForm = (props) => {
       resetForm();
       onSubmit();
     } catch ({ message }) {
+      log(message);
       notify(message);
     }
     setSubmitting(false);
