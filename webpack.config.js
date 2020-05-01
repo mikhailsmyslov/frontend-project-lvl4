@@ -6,6 +6,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = !isProduction;
@@ -44,6 +45,7 @@ module.exports = {
     publicPath: '/assets/',
   },
   plugins: [
+    new CompressionPlugin(),
     new MiniCssExtractPlugin(),
     // new BundleAnalyzerPlugin(),
     new CopyWebpackPlugin([
