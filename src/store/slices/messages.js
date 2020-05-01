@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-/* eslint-disable no-console */
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import _ from 'lodash';
@@ -32,7 +31,7 @@ const createMessage = (message) => async (dispatch, getState) => {
   const { currentChannelId } = getState().app;
   const data = { attributes: { ...message, date: new Date() } };
   try {
-    axios.post(routes.channelMessagesPath(currentChannelId), { data });
+    await axios.post(routes.channelMessagesPath(currentChannelId), { data });
   } finally {
     dispatch(finishLoading());
   }

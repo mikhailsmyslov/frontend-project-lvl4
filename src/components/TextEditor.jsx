@@ -5,7 +5,7 @@ import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import classnames from 'classnames';
-import { merge, noop } from 'lodash';
+import { merge, noop, uniqueId } from 'lodash';
 import WithWindowSize from '../hoc/withWindowSize';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import '../../assets/textEditor.scss';
@@ -54,9 +54,14 @@ const Editor = (props) => {
   } = props;
 
   const [editorState, setEditorState] = useState(getEditorStateFromHtml(value));
+  const [, refresh] = useState();
+  const [editorKey, setEditorkey] = useState('');
   const editorRef = useRef(null);
 
   useEffect(() => { if (autoFocus) editorRef.current.focus(); });
+  useEffect(() => refresh({}), [disabled]);
+  useEffect(() => setEditorkey(uniqueId()), [deviceSize]);
+
 
   useEffect(() => {
     if (value === getHtmlFromEditorState(editorState)) return;
@@ -82,7 +87,7 @@ const Editor = (props) => {
   return (
     <div className={className}>
       <ReactDraftWysiwyg
-        key={deviceSize}
+        key={editorKey}
         readOnly={disabled}
         editorRef={(ref) => { editorRef.current = ref; }}
         editorState={editorState}

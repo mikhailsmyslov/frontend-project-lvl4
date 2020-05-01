@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { noop } from 'lodash';
 import { Button } from 'react-bootstrap';
 import cn from 'classnames';
+import * as Yup from 'yup';
 import { actions } from '../store';
 import { getChannels, getCurrentChannel } from '../selectors';
 import Spinner from './Spinner';
@@ -27,11 +28,11 @@ const mapFormParamsByType = {
   },
 };
 
-const validate = ({ name }) => {
-  if (!name) return { name: 'required' };
-  if (!/^[a-z]{6,15}$/.test(name)) return { name: 'invalidChannelName' };
-  return {};
-};
+const ChannelNameSchema = Yup.object().shape({
+  name: Yup.string()
+    .required('required')
+    .matches(/^[a-z]{6,15}$/, 'invalidChannelName'),
+});
 
 const ChannelForm = (props) => {
   const { onSubmit = noop, type = 'addChannel', currentChannel = {} } = props;
@@ -61,7 +62,7 @@ const ChannelForm = (props) => {
     <Formik
       initialValues={{ name: getInitValue(currentChannel) }}
       onSubmit={handleSubmit}
-      validate={validate}
+      validationSchema={ChannelNameSchema}
     >
       {
       ({ isSubmitting, errors, values }) => (
