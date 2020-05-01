@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
-import faker from 'faker';
+import faker from 'faker/locale/en';
 import cookies from 'js-cookie';
 import { Provider } from 'react-redux';
 import io from 'socket.io-client';

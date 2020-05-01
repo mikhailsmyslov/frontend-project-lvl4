@@ -21,4 +21,5 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-i18nInit().then(() => run(window.gon));
+// eslint-disable-next-line no-undef
+i18nInit().then(() => run(gon));

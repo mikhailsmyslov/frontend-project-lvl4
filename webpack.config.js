@@ -4,6 +4,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isDevelopment = !isProduction;
@@ -26,6 +28,9 @@ module.exports = {
         test: /\.[jt]sx?$/i,
         sourceMap: isDevelopment,
       }),
+      new OptimizeCSSAssetsPlugin({
+
+      }),
     ],
   },
   externals: {
@@ -40,6 +45,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin(),
+    // new BundleAnalyzerPlugin(),
     new CopyWebpackPlugin([
       { from: `${__dirname}/assets` },
     ],
