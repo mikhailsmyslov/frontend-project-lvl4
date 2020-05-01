@@ -1,6 +1,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import '../assets/application.scss';
+import gon from 'gon';
 import i18nInit from './i18n';
 import run from './init';
 import logger from '../lib/logger';
@@ -21,5 +22,4 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// eslint-disable-next-line no-undef
 i18nInit().then(() => run(gon));
