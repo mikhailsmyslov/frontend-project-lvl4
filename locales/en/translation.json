@@ -17,6 +17,7 @@
   "errors": {
     "oops": "Oops, something went wrong...",
     "required": "Field could not be empty",
-    "invalidChannelName": "Invalid channel name. Name should contain only EN lower-cased letters and should be between 6 and 15 characters."
+    "invalidChannelName": "Invalid channel name. Name should contain only EN lower-cased letters and should be between 6 and 15 characters.",
+    "alredyExists": "Entered value already exists."
   }
 }

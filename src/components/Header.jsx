@@ -5,26 +5,28 @@ import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentChannel } from '../selectors';
 import { actions } from '../store';
 
+const { showModal } = actions;
+
 const Header = (props) => {
-  const {
-    className, currentChannel, showRenameChannelForm, showRemoveChannelDialog,
-  } = props;
+  const { className } = props;
   const classes = classnames({
-    'bg-light': true,
-    'border-bottom': true,
-    'd-flex': true,
-    'justify-content-between': true,
-    'align-items-center': true,
-    'py-2': true,
-    'px-4': true,
+    'bg-light border-bottom': true,
+    'd-flex justify-content-between align-items-center': true,
+    'py-2 px-4': true,
   }, className);
 
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  const currentChannel = useSelector(getCurrentChannel);
   const { name, removable } = currentChannel;
+
+  const showRenameChannelForm = () => dispatch(showModal({ display: 'renameChannel' }));
+  const showRemoveChannelDialog = () => dispatch(showModal({ display: 'removeChannel' }));
 
   return (
     <header className={classes}>
@@ -51,14 +53,4 @@ const Header = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  currentChannel: getCurrentChannel(state),
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  showRenameChannelForm: () => dispatch(actions.showModal({ display: 'renameChannel' })),
-  showRemoveChannelDialog: () => dispatch(actions.showModal({ display: 'removeChannel' })),
-});
-
-Header.displayName = 'Header';
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;

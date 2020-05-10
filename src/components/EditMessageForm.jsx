@@ -13,6 +13,7 @@ import UserContext from '../UserContext';
 import Spinner from './Spinner';
 import logger from '../../lib/logger';
 import notify from '../notify';
+import { getCurrentChannelId } from '../selectors';
 
 const log = logger('messages');
 
@@ -41,23 +42,25 @@ const TextEditor = (props) => {
   );
 };
 
-const NewMessageForm = () => {
+const EditMessageForm = () => {
   const dispatch = useDispatch();
   const context = useContext(UserContext);
   const { t } = useTranslation();
-  const currentChannelId = useSelector((state) => state.app.currentChannelId);
+
+  const currentChannelId = useSelector(getCurrentChannelId);
 
   const onSubmit = async (formValues, formActions) => {
     const { text } = formValues;
     const { setSubmitting, resetForm } = formActions;
     try {
       await dispatch(actions.addMessage({ text, author: context.currentUser }, currentChannelId));
+      setSubmitting(false);
       resetForm();
     } catch ({ message }) {
+      setSubmitting(false);
       log(message);
       notify(message);
     }
-    setSubmitting(false);
   };
 
   return (
@@ -90,4 +93,4 @@ const NewMessageForm = () => {
   );
 };
 
-export default NewMessageForm;
+export default EditMessageForm;

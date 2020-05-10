@@ -1,14 +1,14 @@
 // @ts-check
 import React, { useRef, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { useDispatch, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { noop } from 'lodash';
 import { Button } from 'react-bootstrap';
 import cn from 'classnames';
 import * as Yup from 'yup';
 import { actions } from '../store';
-import { getChannels, getCurrentChannel } from '../selectors';
+import { getCurrentChannel, getChannelsNames } from '../selectors';
 import Spinner from './Spinner';
 import logger from '../../lib/logger';
 import notify from '../notify';
@@ -34,11 +34,12 @@ const ChannelNameSchema = Yup.object().shape({
     .matches(/^[a-z]{6,15}$/, 'invalidChannelName'),
 });
 
-const ChannelForm = (props) => {
-  const { onSubmit = noop, type = 'addChannel', currentChannel = {} } = props;
+const EditChannelForm = (props) => {
+  const { onSubmit = noop, type = 'addChannel' } = props;
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
+  const currentChannel = useSelector(getCurrentChannel);
+  const channelsNames = useSelector(getChannelsNames);
   const input = useRef(null);
   useEffect(() => input?.current?.focus(), []);
 
@@ -46,16 +47,21 @@ const ChannelForm = (props) => {
 
   const handleSubmit = async (formValues, formActions) => {
     const { name } = formValues;
+    if (channelsNames.includes(name)) {
+      notify(t('errors.alredyExists'));
+      return;
+    }
     const { setSubmitting, resetForm } = formActions;
     try {
       await dispatch(action({ ...currentChannel, name }));
+      setSubmitting(false);
       resetForm();
       onSubmit();
     } catch ({ message }) {
+      setSubmitting(false);
       log(message);
       notify(message);
     }
-    setSubmitting(false);
   };
 
   return (
@@ -95,9 +101,4 @@ const ChannelForm = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  channels: getChannels(state),
-  currentChannel: getCurrentChannel(state),
-});
-
-export default connect(mapStateToProps)(ChannelForm);
+export default EditChannelForm;

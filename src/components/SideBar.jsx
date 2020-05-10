@@ -1,7 +1,7 @@
 // @ts-check
 import React, { useContext } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSlackHash, faGithub, faBootstrap, faJs, faReact,
@@ -15,9 +15,10 @@ import { getChannels, getCurrentChannelId } from '../selectors';
 
 
 const Channel = (props) => {
-  const {
-    id, name, currentChannelId, dispatch,
-  } = props;
+  const { id, name } = props;
+
+  const dispatch = useDispatch();
+  const currentChannelId = useSelector(getCurrentChannelId);
   const isActive = id === currentChannelId;
 
   const handleChannelChange = (event) => {
@@ -35,10 +36,11 @@ const Channel = (props) => {
 };
 
 const SideBar = (props) => {
-  const { channels, className } = props;
+  const { className } = props;
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { currentUser } = useContext(UserContext);
+  const channels = useSelector(getChannels);
   return (
     <Navbar bg="dark" variant="dark" className={className} expand="md" style={{ minWidth: 'fit-content' }}>
       <Navbar.Brand href="#">
@@ -62,7 +64,7 @@ const SideBar = (props) => {
             <FontAwesomeIcon icon={faPlus} className="mr-1" />
           </Button>
           <Nav className="flex-column">
-            {channels.map((channel) => Channel({ ...props, ...channel, dispatch }))}
+            {channels.map(({ id, name }) => <Channel key={id} id={id} name={name} />)}
           </Nav>
         </div>
         <div className="d-inline-block mx-auto float-right px-2 mb-2 mt-4 justify-content-around text-secondary">

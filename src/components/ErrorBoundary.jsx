@@ -23,7 +23,11 @@ class ErrorBoundary extends React.Component {
     const { hasError } = this.state;
     const { children, t } = this.props;
     if (hasError) {
-      return <h1>{t('errors.oops')}</h1>;
+      return (
+        <div className="w-100 h-100 d-flex justify-content-center align-items-center">
+          <h1>{t('errors.oops')}</h1>
+        </div>
+      );
     }
 
     return children;

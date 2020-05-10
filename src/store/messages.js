@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import _ from 'lodash';
 import routes from '../routes';
-import app from './app';
 import channels from './channels';
 
 const { removeChannelSuccess } = channels.actions;

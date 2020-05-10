@@ -8,6 +8,5 @@ module.exports = {
     ['lodash'],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
-    ['wildcard', { noModifyCase: true }],
   ],
 };

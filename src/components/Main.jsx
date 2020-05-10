@@ -2,7 +2,7 @@
 import React, {
   useRef, useEffect, useState, useContext,
 } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Toast, Button } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import classnames from 'classnames';
@@ -55,13 +55,14 @@ const Message = (props) => {
 };
 
 const Main = (props) => {
-  const { className, messages } = props;
+  const { className } = props;
   const mainClasses = classnames({ 'd-flex flex-column position-relative': true }, className);
 
   const mainRef = useRef();
   const [scrollStatus, setScrollStatus] = useState('initial');
   const [isScrollButtonVisible, setScrollButtonVisibility] = useState(false);
 
+  const messages = useSelector(getCurrentChannelMessages);
 
   const scrollToBottom = () => {
     const main = mainRef.current;
@@ -92,8 +93,4 @@ const Main = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  messages: getCurrentChannelMessages(state),
-});
-
-export default connect(mapStateToProps)(Main);
+export default Main;

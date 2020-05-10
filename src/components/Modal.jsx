@@ -1,118 +1,48 @@
 // @ts-check
-import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { connect } from 'react-redux';
-import { withTranslation } from 'react-i18next';
-import { noop } from 'lodash';
+import React, { useMemo } from 'react';
+import { Modal } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { actions } from '../store';
-import ChannelForm from './ChannelForm';
-import { getCurrentChannel } from '../selectors';
-import Spinner from './Spinner';
-import logger from '../../lib/logger';
-import notify from '../notify';
+import EditChannelForm from './EditChannelForm';
+import RemoveChannelForm from './RemoveChannelForm';
+import { getModalDisplayState } from '../selectors';
 
-const log = logger('channels');
+const ModalComponent = () => {
+  const dispatch = useDispatch();
+  const { t } = useTranslation();
+  const display = useSelector(getModalDisplayState);
 
-class ModalComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.mapDisplayToModalComponent = {
-      addChannel: {
-        titleKey: 'addChannel',
-        renderBody: () => <ChannelForm onSubmit={this.handleCloseModal} type="addChannel" />,
-        displayFooter: false,
-      },
-      renameChannel: {
-        titleKey: 'renameChannel',
-        renderBody: () => <ChannelForm onSubmit={this.handleCloseModal} type="renameChannel" />,
-        displayFooter: false,
-      },
-      removeChannel: {
-        titleKey: 'removeChannel',
-        renderBody: this.renderChannelRemoveConfirmation,
-        okBtnAction: this.handleRemoveChannel,
-      },
-    };
-  }
+  const handleCloseModal = () => dispatch(actions.hideModal());
 
-  handleCloseModal = () => {
-    const { hideModal } = this.props;
-    hideModal();
-  }
+  const mapDisplayToModalComponent = useMemo(() => ({
+    addChannel: {
+      title: 'addChannel',
+      body: <EditChannelForm onSubmit={handleCloseModal} type="addChannel" />,
+    },
+    renameChannel: {
+      title: 'renameChannel',
+      body: <EditChannelForm onSubmit={handleCloseModal} type="renameChannel" />,
+    },
+    removeChannel: {
+      title: 'removeChannel',
+      body: <RemoveChannelForm onSubmit={handleCloseModal} onCancel={handleCloseModal} />,
+    },
+  }), []);
 
-  withCloseModal = (callback = noop) => async () => {
-    await callback();
-    this.handleCloseModal();
-  }
+  const component = mapDisplayToModalComponent[display] || {};
+  const { title, body } = component;
 
-  handleRemoveChannel = async () => {
-    const { removeChannel, currentChannel } = this.props;
-    try {
-      await removeChannel(currentChannel);
-    } catch ({ message }) {
-      log(message);
-      notify(message);
-    }
-  }
+  return (
+    <Modal show={display !== 'none'} onHide={handleCloseModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>{t(title)}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        {body}
+      </Modal.Body>
+    </Modal>
+  );
+};
 
-  renderChannelRemoveConfirmation = () => {
-    const { currentChannel: { name }, t } = this.props;
-    return t('confirmChannelRemove', { name });
-  }
-
-  render() {
-    const { display, t, isLoading } = this.props;
-    const {
-      titleKey = '',
-      renderBody = () => null,
-      okBtnAction = noop,
-      cancelBtnAction = noop,
-      okBtnLabelKey = 'ok',
-      cancelBtnLabelKey = 'cancel',
-      displayHeader = true,
-      displayFooter = true,
-    } = this.mapDisplayToModalComponent[display] || {};
-
-    return (
-      <Modal show={display !== 'none'} onHide={this.handleCloseModal}>
-        { displayHeader && (
-        <Modal.Header closeButton>
-          <Modal.Title>{t(titleKey)}</Modal.Title>
-        </Modal.Header>
-        )}
-        <Modal.Body>{renderBody()}</Modal.Body>
-        {displayFooter && (
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            disabled={isLoading}
-            onClick={this.withCloseModal(cancelBtnAction)}
-          >
-            {t(cancelBtnLabelKey)}
-          </Button>
-          <Button
-            variant="primary"
-            disabled={isLoading}
-            onClick={this.withCloseModal(okBtnAction)}
-          >
-            {isLoading ? <Spinner /> : t(okBtnLabelKey)}
-          </Button>
-        </Modal.Footer>
-        )}
-      </Modal>
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  display: state.ui.modal.display,
-  currentChannel: getCurrentChannel(state),
-  isLoading: state.app.isLoading,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  hideModal: () => dispatch(actions.hideModal()),
-  removeChannel: (channel) => dispatch(actions.removeChannel(channel)),
-});
-
-export default withTranslation()(connect(mapStateToProps, mapDispatchToProps)(ModalComponent));
+export default ModalComponent;
