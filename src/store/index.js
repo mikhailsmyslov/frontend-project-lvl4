@@ -1,7 +1,12 @@
-import * as slices from './slices';
+import app from './app';
+import ui from './ui';
+import messages from './messages';
+import channels from './channels';
 
-export const reducers = Object.values(slices)
+const slices = [app, ui, messages, channels];
+
+export const reducers = slices
   .reduce((acc, slice) => ({ ...acc, [slice.name]: slice.reducer }), {});
 
-export const actions = Object.values(slices)
+export const actions = slices
   .reduce((acc, slice) => ({ ...acc, ...slice.actions }), {});

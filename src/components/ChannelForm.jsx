@@ -18,7 +18,7 @@ const log = logger('channels');
 const mapFormParamsByType = {
   addChannel: {
     placeholderKey: 'enterNewChannelName',
-    action: actions.createChannel,
+    action: actions.addChannel,
     getInitValue: () => '',
   },
   renameChannel: {

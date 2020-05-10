@@ -21,7 +21,7 @@ export default (gon) => {
   const preloadedState = {
     channels,
     messages,
-    app: { currentChannelId, isLoading: false },
+    app: { currentChannelId },
     ui: { modal: { display: 'none' } },
   };
 
@@ -31,13 +31,13 @@ export default (gon) => {
     devTools: process.env.NODE_ENV !== 'production',
   });
 
-  socket.on('newMessage', ({ data }) => store.dispatch(actions.addMessageToStore(data)));
+  socket.on('newMessage', ({ data }) => store.dispatch(actions.addMessageSuccess(data)));
 
-  socket.on('newChannel', ({ data }) => store.dispatch(actions.addChannelToStore(data)));
+  socket.on('newChannel', ({ data }) => store.dispatch(actions.addChannelSuccess(data)));
 
-  socket.on('renameChannel', ({ data }) => store.dispatch(actions.renameChannelInStore(data)));
+  socket.on('renameChannel', ({ data }) => store.dispatch(actions.renameChannelSuccess(data)));
 
-  socket.on('removeChannel', ({ data }) => store.dispatch(actions.removeChannelFromStore(data)));
+  socket.on('removeChannel', ({ data }) => store.dispatch(actions.removeChannelSuccess(data)));
 
   ReactDOM.render(
     <Provider store={store}>

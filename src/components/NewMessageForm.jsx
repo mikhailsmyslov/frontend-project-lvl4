@@ -1,7 +1,7 @@
 // @ts-check
 import React, { useContext } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -45,12 +45,13 @@ const NewMessageForm = () => {
   const dispatch = useDispatch();
   const context = useContext(UserContext);
   const { t } = useTranslation();
+  const currentChannelId = useSelector((state) => state.app.currentChannelId);
 
   const onSubmit = async (formValues, formActions) => {
     const { text } = formValues;
     const { setSubmitting, resetForm } = formActions;
     try {
-      await dispatch(actions.createMessage({ text, author: context.currentUser }));
+      await dispatch(actions.addMessage({ text, author: context.currentUser }, currentChannelId));
       resetForm();
     } catch ({ message }) {
       log(message);

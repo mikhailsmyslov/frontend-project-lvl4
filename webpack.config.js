@@ -59,6 +59,9 @@ module.exports = {
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb|ru/),
   ],
   devtool: isDevelopment ? 'source-map' : false,
+  devServer: {
+    port: 8081,
+  },
   module: {
     rules: [
       {
